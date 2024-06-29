@@ -1,6 +1,8 @@
 # Xbox 360 Discord Rich Presence Script
 
-## Please note this script as well as this readme was written by ChatGPT. Tested and checked by a human.
+### Please note this script as well as this readme was written by ChatGPT.
+
+### Tested and checked by a human.
 
 This script updates your Discord Rich Presence with the currently playing game on your modded Xbox 360 running the Aurora dashboard with the Nova plugin.
 
@@ -23,7 +25,7 @@ This script updates your Discord Rich Presence with the currently playing game o
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/Xbox360_presence.git
+   git clone https://github.com/jnackmclain/Xbox360_presence.git
    cd Xbox360_presence
    ```
 
@@ -59,9 +61,7 @@ Enter the IP address of your Xbox (Ensure Nova Web UI is running): 192.168.0.36
 
 When running, the script will update your Discord status to show the game you're playing along with the elapsed time:
 
-```plaintext
-Displaying game 'Guitar Hero II' with Title ID: 415607E7 and image from http://www.xboxunity.net/Resources/Lib/Icon.php?tid=415607E7. For 15 minutes.
-```
+![example](media/example.png)
 
 ## License
 
