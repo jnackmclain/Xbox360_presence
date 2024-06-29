@@ -48,11 +48,11 @@ def get_elapsed_time(start_time):
     else:
         return f"for {int(minutes)} minute{'s' if minutes != 1 else ''}"
 
-def set_game(ip_address, start_time):
+def set_game(ip_address, start_time, last_title_id):
     title_id = fetch_title_id(ip_address)
     
     if not title_id:
-        return
+        return start_time, last_title_id
 
     if title_id == '00000000':
         game_name = "Aurora"
@@ -66,6 +66,11 @@ def set_game(ip_address, start_time):
         if response.status_code != 200:
             image_url = "https://gentle-drum.flywheelsites.com/wp-content/uploads/2013/01/xbox-logo-square-web.jpg"
     
+    # Reset start_time if a new game is detected
+    if title_id != last_title_id:
+        start_time = datetime.now()
+        last_title_id = title_id
+
     elapsed_time = get_elapsed_time(start_time)
     RPC.update(
         state=f"{elapsed_time.capitalize()}",
@@ -74,6 +79,8 @@ def set_game(ip_address, start_time):
         large_text=game_name
     )
     print(f"Displaying game '{game_name}' with Title ID: {title_id} and image from {image_url}. {elapsed_time.capitalize()}.")
+    
+    return start_time, last_title_id
 
 def main():
     RPC.connect()
@@ -85,10 +92,11 @@ def main():
         ip_address = input("Enter the IP address of your Xbox (Ensure Nova Web UI is running): ")
     
     start_time = datetime.now()
+    last_title_id = None
     
     try:
         while True:
-            set_game(ip_address, start_time)
+            start_time, last_title_id = set_game(ip_address, start_time, last_title_id)
             time.sleep(15)  # Update every 15 seconds
     except KeyboardInterrupt:
         print("Disconnecting from Discord...")
