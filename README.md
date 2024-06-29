@@ -34,6 +34,16 @@ This script updates your Discord Rich Presence with the currently playing game o
    pip install requests pypresence
    ```
 
+3. **Include your Discord Application Client ID:**
+
+Sign into the [Discord Developer Portal](https://discord.com/developers/applications).
+
+Create a new Application and name it. The name will show up in the rich presence. I like using `Xbox 360 Hardware`.
+
+Copy the client ID into the script, updating `YOUR_CLIENT_ID_HERE`
+
+![client_id](media/client_id.png)
+
 ## Usage
 
 You can run the script with or without providing the IP address of your Xbox as an argument.
