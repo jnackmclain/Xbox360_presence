@@ -1,5 +1,7 @@
 # Xbox 360 Discord Rich Presence Script
 
+![example](media/example.png)
+
 ### Please note this script as well as this readme was written by ChatGPT.
 
 ### Tested and checked by a human.
