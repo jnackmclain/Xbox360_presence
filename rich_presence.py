@@ -9,7 +9,8 @@ RPC = Presence(client_id)  # Standard Presence for synchronous use
 
 # Fetch the JSON data
 def fetch_game_names():
-    url = "https://gist.githubusercontent.com/albertofustinoni/51f2ea0537130f4820a3f5ed49d69042/raw/9ffead88e369a40e120082ef385efea6fc1cbb81/Xbox360TitleIDs.json"
+    # shout out albertofustinoni for the original, i just had some formatting updates for gh/rb
+    url = "https://gist.githubusercontent.com/jnackmclain/be1495767a2536b8f455fc7e293255c8/raw/950174f1e1eceda361a8dd3047883f8d890c7084/Xbox360TitleIDs.json"
     response = requests.get(url)
     return {game['TitleID']: game['Title'] for game in response.json()}
 
