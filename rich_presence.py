@@ -99,11 +99,11 @@ def set_game(ip_address, start_time, last_title_id, last_printed_minute):
     current_minute = elapsed_time
     
     if current_minute != last_printed_minute:
-        print(f"Displaying game '{game_name}' with Title ID: {title_id} {elapsed_time.capitalize()}.")
+        print(f"Displaying game '{game_name}' with Title ID: {title_id} {elapsed_time}.")
         last_printed_minute = current_minute
     
     RPC.update(
-        state=f"{elapsed_time.capitalize()}",
+        state=f"{elapsed_time}",
         details=f"{game_name}",
         large_image=image_url,
         large_text=game_name
