@@ -72,11 +72,11 @@ def get_elapsed_time(start_time):
     else:
         return f"for {int(minutes)} minute{'s' if minutes != 1 else ''}"
 
-def set_game(ip_address, start_time, last_title_id):
+def set_game(ip_address, start_time, last_title_id, last_printed_minute):
     title_id = fetch_title_id(ip_address)
     
     if not title_id:
-        return start_time, last_title_id
+        return start_time, last_title_id, last_printed_minute
 
     if title_id == '00000000':
         game_name = "Aurora"
@@ -96,19 +96,22 @@ def set_game(ip_address, start_time, last_title_id):
         last_title_id = title_id
 
     elapsed_time = get_elapsed_time(start_time)
+    current_minute = datetime.now().minute
+    
+    if current_minute != last_printed_minute:
+        print(f"Displaying game '{game_name}' with Title ID: {title_id} {elapsed_time.capitalize()}.")
+        last_printed_minute = current_minute
+    
     RPC.update(
         state=f"{elapsed_time.capitalize()}",
         details=f"{game_name}",
         large_image=image_url,
         large_text=game_name
     )
-    print(f"Displaying game '{game_name}' with Title ID: {title_id} and image from {image_url}. {elapsed_time.capitalize()}.")
     
-    return start_time, last_title_id
+    return start_time, last_title_id, last_printed_minute
 
 def main():
-    RPC.connect()
-
     # Allow IP to be given as an argument
     if len(sys.argv) > 1:
         ip_address = sys.argv[1]
@@ -119,10 +122,14 @@ def main():
     
     start_time = datetime.now()
     last_title_id = None
+    last_printed_minute = None  # Ensure first message is printed
     
+    RPC.connect()
+    print("Connecting to Discord...")
+
     try:
         while True:
-            start_time, last_title_id = set_game(ip_address, start_time, last_title_id)
+            start_time, last_title_id, last_printed_minute = set_game(ip_address, start_time, last_title_id, last_printed_minute)
             time.sleep(15)  # Update every 15 seconds
     except KeyboardInterrupt:
         print("Disconnecting from Discord...")
