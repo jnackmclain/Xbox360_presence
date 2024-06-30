@@ -48,22 +48,38 @@ Copy the client ID into the script, updating `YOUR_CLIENT_ID_HERE`
 
 ![client_id](media/client_id.png)
 
+## Configuration
+
+1. **Rename `config_default.ini` to `config.ini` which will have the following content:**
+   ```ini
+   [discord]
+   client_id = YOUR_CLIENT_ID_HERE
+
+   [xbox]
+   ip_address = YOUR_XBOX_IP_HERE
+   ```
+
+2. **Update the client id with the application id we got earlier**
+
+3. **Update the ip_address with the IP address of your Xbox 360**
+
+```ini
+   [discord]
+   client_id = 12345678910
+
+   [xbox]
+   ip_address = 192.168.0.36
+   ```
+
 ## Usage
 
 You can run the script with or without providing the IP address of your Xbox as an argument.
 
-### Option 1: Provide the IP address as a command-line argument
-```bash
-python rich_presence.py 192.168.0.36
-```
+### Option 1: Run the script with no arguments and the IP address in the config.ini will be used
 
-### Option 2: Run the script and input the IP address when prompted
+### Option 2: Override the config.ini IP address as a command-line argument
 ```bash
-python rich_presence.py
-```
-You will be prompted to enter the IP address of your Xbox:
-```plaintext
-Enter the IP address of your Xbox (Ensure Nova Web UI is running): 192.168.0.36
+python rich_presence.py 192.168.0.69
 ```
 
 ## Notes

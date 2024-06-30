@@ -3,16 +3,39 @@ from pypresence import Presence
 import time
 from datetime import datetime, timedelta
 import sys
+import json
+import os
+import configparser
 
-client_id = 'YOUR_CLIENT_ID_HERE'
+# Load configuration
+config = configparser.ConfigParser()
+config_file = 'config.ini'
+default_config_file = 'config_default.ini'
+
+if not os.path.exists(config_file):
+    if os.path.exists(default_config_file):
+        config.read(default_config_file)
+        with open(config_file, 'w') as new_config_file:
+            config.write(new_config_file)
+    else:
+        print("Default configuration file not found.")
+        sys.exit(1)
+else:
+    config.read(config_file)
+
+client_id = config['discord'].get('client_id', 'YOUR_CLIENT_ID_HERE')
+
+if client_id == 'YOUR_CLIENT_ID_HERE':
+    print("Please update your client_id in config.ini")
+    sys.exit(1)
+
 RPC = Presence(client_id)  # Standard Presence for synchronous use
 
-# Fetch the JSON data
+# Fetch the JSON data from the local file
 def fetch_game_names():
-    # shout out albertofustinoni for the original, i just had some formatting updates for gh/rb
-    url = "https://gist.githubusercontent.com/jnackmclain/be1495767a2536b8f455fc7e293255c8/raw/950174f1e1eceda361a8dd3047883f8d890c7084/Xbox360TitleIDs.json"
-    response = requests.get(url)
-    return {game['TitleID']: game['Title'] for game in response.json()}
+    with open('xbox360titleids.json', 'r') as file:
+        data = json.load(file)
+    return {game['TitleID']: game['Title'] for game in data}
 
 game_names = fetch_game_names()
 
@@ -75,7 +98,7 @@ def set_game(ip_address, start_time, last_title_id):
     elapsed_time = get_elapsed_time(start_time)
     RPC.update(
         state=f"{elapsed_time.capitalize()}",
-        details=f"Playing {game_name}",
+        details=f"{game_name}",
         large_image=image_url,
         large_text=game_name
     )
@@ -90,7 +113,9 @@ def main():
     if len(sys.argv) > 1:
         ip_address = sys.argv[1]
     else:
-        ip_address = input("Enter the IP address of your Xbox (Ensure Nova Web UI is running): ")
+        ip_address = config['xbox'].get('ip_address', None)
+        if not ip_address:
+            ip_address = input("Enter the IP address of your Xbox (Ensure Nova Web UI is running): ")
     
     start_time = datetime.now()
     last_title_id = None
