@@ -125,7 +125,6 @@ def main():
     last_printed_minute = None  # Ensure first message is printed
     
     RPC.connect()
-    print("Connecting to Discord...")
 
     try:
         while True:
