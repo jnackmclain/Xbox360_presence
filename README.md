@@ -1,4 +1,4 @@
-# Xbox 360 Discord Rich Presence Script
+# RGH Xbox 360 Discord Rich Presence Script
 
 ![example](media/example.png)
 
