@@ -96,7 +96,7 @@ def set_game(ip_address, start_time, last_title_id, last_printed_minute):
         last_title_id = title_id
 
     elapsed_time = get_elapsed_time(start_time)
-    current_minute = datetime.now().minute
+    current_minute = elapsed_time
     
     if current_minute != last_printed_minute:
         print(f"Displaying game '{game_name}' with Title ID: {title_id} {elapsed_time.capitalize()}.")
