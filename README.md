@@ -44,7 +44,7 @@ Create a new Application and name it. The name will show up in the rich presence
 
 ![client_id_general](media/client_id_general.png)
 
-Copy the client ID into the script, updating `YOUR_CLIENT_ID_HERE`
+Copy your application client id.
 
 ![client_id](media/client_id.png)
 
