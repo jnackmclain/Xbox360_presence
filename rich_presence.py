@@ -18,7 +18,7 @@ if not os.path.exists(config_file):
         with open(config_file, 'w') as new_config_file:
             config.write(new_config_file)
     else:
-        print("Default configuration file not found.")
+        print("Default configuration file not found.", flush=True)
         sys.exit(1)
 else:
     config.read(config_file)
@@ -26,7 +26,7 @@ else:
 client_id = config['discord'].get('client_id', 'YOUR_CLIENT_ID_HERE')
 
 if client_id == 'YOUR_CLIENT_ID_HERE':
-    print("Please update your client_id in config.ini")
+    print("Please update your client_id in config.ini", flush=True)
     sys.exit(1)
 
 RPC = Presence(client_id)  # Standard Presence for synchronous use
@@ -41,23 +41,33 @@ game_names = fetch_game_names()
 
 def fetch_title_id(ip_address):
     url = f"http://{ip_address}:9999/title"
-    response = requests.get(url)
+    try:
+        response = requests.get(url, timeout=5)
+    except requests.RequestException as e:
+        print(f"Error connecting to the Xbox at {url}: {str(e)}", flush=True)
+        raise  # This will exit the script if it can't connect to the Xbox
     
     if response.status_code != 200:
-        print(f"Failed to connect to the Xbox at {url}")
+        print(f"Failed to connect to the Xbox at {url}", flush=True)
         return None
     
-    data = response.json()
+    try:
+        data = response.json()
+    except json.JSONDecodeError as e:
+        print(f"Failed to decode JSON from {url}: {str(e)}", flush=True)
+        return None
+    
     title_id = data.get('titleid', None)
     
     if not title_id:
-        print("TitleId not found in the response")
+        print("TitleId not found in the response", flush=True)
         return None
     
     if title_id.startswith("0x"):
         title_id = title_id[2:]  # Remove '0x' prefix
     
     return title_id
+
 
 def get_elapsed_time(start_time):
     elapsed = datetime.now() - start_time
@@ -80,15 +90,15 @@ def set_game(ip_address, start_time, last_title_id, last_printed_minute):
 
     if title_id == '00000000':
         game_name = "Aurora"
-        image_url = "https://raw.githubusercontent.com/MasterPhooey/Xbox360_presence/main/icons/00000166.png"
+        image_url = "https://raw.githubusercontent.com/jnackmclain/Xbox360_presence/main/icons/00000166.png"
     else:
         game_name = game_names.get(title_id.upper(), f"Unknown Title ID: {title_id}")
-        image_url = f"https://raw.githubusercontent.com/MasterPhooey/Xbox360_presence/main/icons/{title_id}.png"
-
+        image_url = f"https://raw.githubusercontent.com/jnackmclain/Xbox360_presence/main/icons/{title_id}.png"
+    
         # Check if the image exists
         response = requests.get(image_url)
         if response.status_code != 200:
-            image_url = "https://raw.githubusercontent.com/MasterPhooey/Xbox360_presence/main/icons/default.png"
+            image_url = "https://raw.githubusercontent.com/jnackmclain/Xbox360_presence/main/icons/default.png"
     
     # Reset start_time if a new game is detected
     if title_id != last_title_id:
@@ -99,7 +109,7 @@ def set_game(ip_address, start_time, last_title_id, last_printed_minute):
     current_minute = elapsed_time
     
     if current_minute != last_printed_minute:
-        print(f"Displaying game '{game_name}' with Title ID: {title_id} {elapsed_time}.")
+        print(f"Displaying game '{game_name}' with Title ID: {title_id} {elapsed_time}.", flush=True)
         last_printed_minute = current_minute
     
     RPC.update(
@@ -131,10 +141,10 @@ def main():
             start_time, last_title_id, last_printed_minute = set_game(ip_address, start_time, last_title_id, last_printed_minute)
             time.sleep(15)  # Update every 15 seconds
     except KeyboardInterrupt:
-        print("Disconnecting from Discord...")
+        print("Disconnecting from Discord...", flush=True)
         RPC.clear()
         RPC.close()
-        print("Disconnected. Goodbye!")
+        print("Disconnected. Goodbye!", flush=True)
 
 if __name__ == "__main__":
     main()
