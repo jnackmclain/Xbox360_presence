@@ -80,15 +80,15 @@ def set_game(ip_address, start_time, last_title_id, last_printed_minute):
 
     if title_id == '00000000':
         game_name = "Aurora"
-        image_url = "http://xboxunity.net/Resources/Lib/Icon.php?tid=00000166"
+        image_url = "https://raw.githubusercontent.com/MasterPhooey/Xbox360_presence/main/icons/00000166.png"
     else:
         game_name = game_names.get(title_id.upper(), f"Unknown Title ID: {title_id}")
-        image_url = f"http://www.xboxunity.net/Resources/Lib/Icon.php?tid={title_id}"
-    
+        image_url = f"https://raw.githubusercontent.com/MasterPhooey/Xbox360_presence/main/icons/{title_id}.png"
+
         # Check if the image exists
         response = requests.get(image_url)
         if response.status_code != 200:
-            image_url = "https://gentle-drum.flywheelsites.com/wp-content/uploads/2013/01/xbox-logo-square-web.jpg"
+            image_url = "https://raw.githubusercontent.com/MasterPhooey/Xbox360_presence/main/icons/default.png"
     
     # Reset start_time if a new game is detected
     if title_id != last_title_id:
